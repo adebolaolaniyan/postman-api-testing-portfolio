@@ -1,0 +1,623 @@
+{
+  "info": {
+    "_postman_id": "b2f0d911-2a83-4e79-a1b2-5e4c3c22f201",
+    "name": "Phase 2 - API Testing Portfolio",
+    "description": "Portable reconstruction of the documented Phase 2 test cases. See README for scope and limitations.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "TC01 - GET Echo Basic Request",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/get"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Response is valid JSON\", function () { pm.response.to.be.json });",
+              "pm.test(\"Response URL contains /get\", function () { pm.expect(pm.response.json().url).to.include(\"/get\") });",
+              "pm.test(\"Expected fields exist\", function () { var d=pm.response.json(); pm.expect(d).to.have.property('args'); pm.expect(d).to.have.property('headers'); pm.expect(d).to.have.property('url') });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC02 - GET Echo Query Parameters",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/get?name=Adebola&role=QA"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Name is echoed\", function () { pm.expect(pm.response.json().args.name).to.eql(\"Adebola\") });",
+              "pm.test(\"Role is echoed\", function () { pm.expect(pm.response.json().args.role).to.eql(\"QA\") });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC03 - GET Echo Empty Query Parameter",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/get?name="
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Name key exists\", function () { pm.expect(pm.response.json().args).to.have.property('name') });",
+              "pm.test(\"Name is empty\", function () { pm.expect(pm.response.json().args.name).to.eql(\"\") });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC04 - GET Echo Missing Query Parameter",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/get"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Name key is absent\", function () { pm.expect(pm.response.json().args).to.not.have.property('name') });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC05 - GET Echo Response Headers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/get"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Content-Type is JSON\", function () { pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\") });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });",
+              "pm.test(\"Headers object exists\", function () { pm.expect(pm.response.json().headers).to.be.an('object') });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC06 - GET Echo Response Time",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/get"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Response under 5000 ms\", function () { pm.expect(pm.response.responseTime).to.be.below(5000) });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC07 - GET Echo Response Data Type",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/get"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"URL is string\", function () { pm.expect(pm.response.json().url).to.be.a('string') });",
+              "pm.test(\"URL is not empty\", function () { pm.expect(pm.response.json().url).to.not.be.empty });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC08 - GET Echo Nested JSON Validation",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/get"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Headers is object\", function () { pm.expect(pm.response.json().headers).to.be.an('object') });",
+              "pm.test(\"Host exists\", function () { pm.expect(pm.response.json().headers).to.have.property('Host') });",
+              "pm.test(\"Host is string\", function () { pm.expect(pm.response.json().headers.Host).to.be.a('string') });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC09 - GET Echo Request Method Validation",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/get",
+        "description": "The method assertion checks Postman's configured method, not independent proof of what the server received."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Configured method is GET\", function () { pm.expect(pm.request.method).to.eql('GET') });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });",
+              "pm.test(\"URL contains /get\", function () { pm.expect(pm.response.json().url).to.include(\"/get\") });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC10 - GET Echo Custom Request Header",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-QA-Test",
+            "value": "Phase2Portfolio",
+            "type": "text"
+          }
+        ],
+        "url": "https://httpbin.org/get"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Custom header is echoed\", function () { pm.expect(pm.response.json().headers[\"X-Qa-Test\"]).to.eql(\"Phase2Portfolio\") });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC11 - POST JSONPlaceholder Create Post",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"API testing portfolio\",\n  \"body\": \"Testing POST request\",\n  \"userId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "JSONPlaceholder simulates writes; persistence is not guaranteed."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201) });",
+              "pm.test(\"ID exists\", function () { pm.expect(pm.response.json()).to.have.property('id') });",
+              "pm.test(\"Title echoed\", function () { pm.expect(pm.response.json().title).to.eql(\"API testing portfolio\") });",
+              "pm.test(\"Body echoed\", function () { pm.expect(pm.response.json().body).to.eql(\"Testing POST request\") });",
+              "pm.test(\"User ID echoed\", function () { pm.expect(pm.response.json().userId).to.eql(1) });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC12 - PUT JSONPlaceholder Update Post",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "https://jsonplaceholder.typicode.com/posts/1",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 1,\n  \"title\": \"Updated API test\",\n  \"body\": \"Testing PUT request\",\n  \"userId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "JSONPlaceholder simulates writes; persistence is not guaranteed."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"ID is 1\", function () { pm.expect(pm.response.json().id).to.eql(1) });",
+              "pm.test(\"Title updated\", function () { pm.expect(pm.response.json().title).to.eql(\"Updated API test\") });",
+              "pm.test(\"Body updated\", function () { pm.expect(pm.response.json().body).to.eql(\"Testing PUT request\") });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC13 - PATCH JSONPlaceholder Partial Update",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "https://jsonplaceholder.typicode.com/posts/1",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Patched API test\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "JSONPlaceholder simulates writes; persistence is not guaranteed."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"ID is 1\", function () { pm.expect(pm.response.json().id).to.eql(1) });",
+              "pm.test(\"Title updated\", function () { pm.expect(pm.response.json().title).to.eql(\"Patched API test\") });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });",
+              "pm.test(\"User ID returned\", function () { pm.expect(pm.response.json().userId).to.eql(1) });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TC14 - DELETE JSONPlaceholder Post",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "https://jsonplaceholder.typicode.com/posts/1",
+        "description": "JSONPlaceholder simulates deletion; persistent deletion is not proven."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });",
+              "pm.test(\"Response is object\", function () { pm.expect(pm.response.json()).to.be.an('object') });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "NT01 - HTTP 400 Bad Request",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/status/400"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400) });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "NT02 - HTTP 404 Not Found",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://httpbin.org/status/404"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404) });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "NT03 - Malformed JSON Behavior",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "https://httpbin.org/post",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\": \"not valid\",",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Records HTTPBin's observed response; it does not prove a server rejects malformed JSON."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTPBin returns 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Valid JSON response\", function () { pm.response.to.be.json });",
+              "pm.test(\"Malformed JSON is parsed as null\", function () { pm.expect(pm.response.json().json).to.eql(null) });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "NT04 - Login Missing Password",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "https://reqres.in/api/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"peter@klaven\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Response is client error\", function () { pm.expect(pm.response.code).to.be.oneOf([400,401]) });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "NT05 - Invalid Email Input",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "https://reqres.in/api/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": 123,\n  \"password\": \"password123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Demo API behavior may change; assertions focus on client-error handling."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Response is client error\", function () { pm.expect(pm.response.code).to.be.oneOf([400,401]) });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AT01 - Successful Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "https://dummyjson.com/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"emilys\",\n  \"password\": \"emilyspass\",\n  \"expiresInMins\": 30\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Public demo credentials for DummyJSON only."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });",
+              "pm.test(\"Access token exists\", function () { pm.expect(pm.response.json().accessToken).to.be.a('string').and.not.empty });",
+              "pm.test(\"Refresh token exists\", function () { pm.expect(pm.response.json().refreshToken).to.be.a('string').and.not.empty });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AT02 - Protected Endpoint With Token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://dummyjson.com/auth/me",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "Set collection variable accessToken to the accessToken returned by AT01 before running."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200) });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });",
+              "pm.test(\"User ID exists\", function () { pm.expect(pm.response.json().id).to.exist });",
+              "pm.test(\"Username is string\", function () { pm.expect(pm.response.json().username).to.be.a('string') });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AT03 - Protected Endpoint Without Token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://dummyjson.com/auth/me",
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "Clear stored authentication cookies before running if the client sends them."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Unauthenticated request returns 401\", function () { pm.response.to.have.status(401) });",
+              "pm.test(\"Valid JSON\", function () { pm.response.to.be.json });",
+              "pm.test(\"Error says token required\", function () { pm.expect(pm.response.json().message).to.include(\"Access Token is required\") });"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
